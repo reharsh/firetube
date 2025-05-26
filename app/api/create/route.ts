@@ -1,17 +1,34 @@
+import { BASE_PROMPT, getScriptWriterPrompt } from '@/lib/prompts';
 import { google } from '@ai-sdk/google';
-import { streamText } from 'ai';
+import { generateText, streamText } from 'ai';
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
 
 export async function POST(req: Request) {
-  const { prompt } = await req.json();
-  console.log('Prompt:', prompt);
+  const { title } = await req.json();
+  
+  const scriptPrompt = getScriptWriterPrompt(title);
 
-  const result = streamText({
-    model: google('gemini-1.5-flash'),
-    prompt,
+  const {text} = await generateText({
+    model: google('gemini-2.0-flash-exp'),
+    messages: [
+      { role: "system", content: BASE_PROMPT },
+      { role: "user", content: scriptPrompt }
+    ]
   });
 
-  return result.toDataStreamResponse();
+  const response = await fetch(`${process.env.APP_URL}/api/artifact`, {
+  method: "POST",
+  body: JSON.stringify({ script: text }),
+});
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Failed to create artifact: ${errorText}`);
+  }
+  const artifactResponse = await response.json();
+  console.log(artifactResponse);
+
+  return Response.json({ script: text, artifact: artifactResponse.text });
 }
