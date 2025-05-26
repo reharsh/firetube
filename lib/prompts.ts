@@ -178,8 +178,19 @@ Here are some examples of correct usage of artifacts:
           ...
         </fireAction>
 
+        <fireAction type="file" filePath="src/index.tsx">
+        import { registerRoot } from 'remotion';
+        import { MyVideo } from './MyVideo';
+
+        registerRoot(MyVideo);
+        </fireAction>
+
         <fireAction type="shell">
-          npx remotion lambda render
+          npm install styled-components
+        </fireAction>
+
+        <fireAction type="shell">
+          npx remotion studio src/index.tsx
         </fireAction>
       </fireArtifact>
     </assistant_response>
@@ -205,12 +216,19 @@ Here are some examples of correct usage of artifacts:
           npm install remotion
         </fireAction>
 
-        <fireAction type="file" filePath="index.ts">
-          ...
+        <fireAction type="shell">
+          npm install styled-components
+        </fireAction>
+
+        <fireAction type="file" filePath="src/index.tsx">
+        import { registerRoot } from 'remotion';
+        import { MyVideo } from './MyVideo';
+
+        registerRoot(MyVideo);
         </fireAction>
 
         <fireAction type="shell">
-          npx remotion studio
+          npx remotion studio src/index.tsx
         </fireAction>
       </fireArtifact>
 
@@ -249,8 +267,15 @@ Here are some examples of correct usage of artifacts:
         }
         </fireAction>
 
-        <fireAction type="file" filePath="index.ts">
-          ...
+        <fireAction type="file" filePath="src/index.tsx">
+        import { registerRoot } from 'remotion';
+        import { MyVideo } from './MyVideo';
+
+        registerRoot(MyVideo);
+        </fireAction>
+
+        <fireAction type="shell">
+          npm install styled-components
         </fireAction>
 
         <fireAction type="file" filePath="Frames/Frame01.tsx">
@@ -266,7 +291,7 @@ Here are some examples of correct usage of artifacts:
         </fireAction>
 
         <fireAction type="shell">
-        npx remotion studio
+        npx remotion studio src/index.tsx
         </fireAction>
       </fireArtifact>
 
@@ -277,4 +302,4 @@ Here are some examples of correct usage of artifacts:
 `
 
 
-export const remotionPrePrompt = `<fireArtifact id=\"project-import\" title=\"Project Files\"><fireAction type=\"file\" filePath=\"package.json\">{\n  \"name\": \"template-empty\",\n  \"version\": \"1.0.0\",\n  \"description\": \"My Remotion video\",\n  \"scripts\": {\n    \"dev\": \"remotion studio\",\n    \"build\": \"remotion bundle\",\n    \"upgrade\": \"remotion upgrade\",\n    \"lint\": \"eslint src && tsc\"\n  },\n  \"repository\": {},\n  \"license\": \"UNLICENSED\",\n  \"dependencies\": {\n    \"@remotion/cli\": \"^4.0.0\",\n    \"react\": \"19.0.0\",\n    \"react-dom\": \"19.0.0\",\n    \"remotion\": \"^4.0.0\"\n  },\n  \"devDependencies\": {\n    \"@remotion/eslint-config-flat\": \"^4.0.0\",\n    \"@types/react\": \"19.0.0\",\n    \"@types/web\": \"0.0.166\",\n    \"eslint\": \"9.19.0\",\n    \"prettier\": \"3.3.3\",\n    \"typescript\": \"5.8.2\"\n  },\n  \"private\": true\n}\n</fireAction><fireAction type=\"file\" filePath=\"remotion.config.ts\">module.exports = {\n  compositionName: {composition name},\n  serveDir: 'out',\n};\n</fireAction><fireAction type=\"file\" filePath=\"tsconfig.json\">{\n  \"compilerOptions\": {\n    \"target\": \"ES2018\",\n    \"module\": \"commonjs\",\n    \"jsx\": \"react-jsx\",\n    \"strict\": true,\n    \"noEmit\": true,\n    \"lib\": [\"es2015\"],\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"noUnusedLocals\": true\n  },\n  \"exclude\": [\"remotion.config.ts\"]\n}\n</fireAction></fireArtifact>`;
+export const remotionPrePrompt = `<fireArtifact id=\"project-import\" title=\"Project Files\"><fireAction type=\"file\" filePath=\"package.json\">{\n  \"name\": \"template-empty\",\n  \"version\": \"1.0.0\",\n  \"description\": \"My Remotion video\",\n  \"scripts\": {\n    \"dev\": \"remotion studio\",\n    \"build\": \"remotion bundle\",\n    \"upgrade\": \"remotion upgrade\",\n    \"lint\": \"eslint src && tsc\"\n  },\n  \"repository\": {},\n  \"license\": \"UNLICENSED\",\n  \"dependencies\": {\n    \"@remotion/cli\": \"^4.0.0\",\n    \"react\": \"19.0.0\",\n    \"react-dom\": \"19.0.0\",\n    \"remotion\": \"^4.0.0\"\n  },\n  \"devDependencies\": {\n    \"@remotion/eslint-config-flat\": \"^4.0.0\",\n    \"@types/react\": \"19.0.0\",\n    \"@types/web\": \"0.0.166\",\n    \"eslint\": \"9.19.0\",\n    \"prettier\": \"3.3.3\",\n    \"typescript\": \"5.8.2\"\n  },\n  \"private\": true\n}\n</fireAction><fireAction type=\"file\" filePath=\"remotion.config.ts\">module.exports = {\n  compositionName: 'composition_name',\n  serveDir: 'out',\n};\n</fireAction><fireAction type=\"file\" filePath=\"tsconfig.json\">{\n  \"compilerOptions\": {\n    \"target\": \"ES2018\",\n    \"module\": \"commonjs\",\n    \"jsx\": \"react-jsx\",\n    \"strict\": true,\n    \"noEmit\": true,\n    \"lib\": [\"es2015\"],\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"noUnusedLocals\": true\n  },\n  \"exclude\": [\"remotion.config.ts\"]\n}\n</fireAction></fireArtifact>`;

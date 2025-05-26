@@ -141,6 +141,7 @@ export default function Producer () {
         for (const arg of args) {
           const cmdArgs = arg.trim().split(' ');
           const process = await webcontainer?.spawn(cmdArgs[0], cmdArgs.slice(1));
+          console.log(`Executing command: ${arg}`);
           await process?.exit;
         }
       } catch (error) {
@@ -152,9 +153,9 @@ export default function Producer () {
       giveFileStructure();
     },[steps,files]);
 
-    // useEffect(() => {
-    //     buildSteps("World war 2");
-    // },[]);
+    useEffect(() => {
+        buildSteps("World war 2");
+    },[]);
 
 
     useEffect(() => {
@@ -164,7 +165,7 @@ export default function Producer () {
         if (isBooted && webcontainer) {
           console.log("WebContainer is booted, mounting files:", structuredFiles);
             webcontainer?.mount(structuredFiles)
-            console.log("mounted files:");
+            console.log("mounted files:", structuredFiles);
         }
       }
       mountFiles();
@@ -173,7 +174,7 @@ export default function Producer () {
     return (
         <div className="w-full h-full flex flex-col bg-zinc-800 p-4">
             <h1>Producer</h1>
-            <button onClick={() => buildSteps("Sample Title")}>
+            <button onClick={() => buildSteps("googles gemini is agi?")}>
                 Build sample title
             </button>
 

@@ -10,12 +10,11 @@ export default function useWebcontainer() {
     console.log("useWebcontainer hook initialized",webcontainerInstance);
     useEffect(() => {
         const bootWebContainer = async () => {
-            try {
-            webcontainerInstance = await WebContainer.boot();
-            } catch (error) {
-            console.error("Failed to boot WebContainer:", error);
-            return;
+            if (!webcontainerInstance) {
+                webcontainerInstance = await WebContainer.boot();
             }
+            setIsBooted(true);
+            setWebcontainer(webcontainerInstance);
         };
         bootWebContainer();
     }, []);
