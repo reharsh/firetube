@@ -31,10 +31,8 @@ Your scripts should:
 - Provide detailed frame descriptions for visual elements (code, diagrams, animations, memes, text overlays).
 - Start with a strong hook in the first 5-10 seconds. [1]
 
-
-<systemconstraints>
+<script_instructions>
 Your script must be made up of series of Frames. Each frame must have following structure:
-
     <fireArtifact>
         <frame>
             <time>0:00-0:05</time>
@@ -51,14 +49,12 @@ Your script must be made up of series of Frames. Each frame must have following 
         ...
         </frame>
     </fireArtifact>
-
-</systemconstraints>
-
-Here is a complete small script example for reference:`
+</script_instructions>
+`
 
 
 export const artifactInfoPrompt = (cwd: string = WORK_DIR, script: string) => `
-You've been tasked with creating a comprehensive artifact for a video project using Remotion. This artifact will include all necessary steps, files, and shell commands to set up the project and generate the video.
+You've been tasked with creating a comprehensive artifact for a video project using Remotion. This artifact will include all necessary steps, files, and shell commands to set up the project and generate the video completely END-TO-END.
 Script for the video project:
 ${script} 
 <artifact_info>
@@ -126,7 +122,7 @@ ${script}
       - Use imports to connect these modules together effectively.
 
     15. IMPORTANT: Assets like images, videos, and other media files should be be used by their urls, not by copying them into the project. This means that you should use the URLs of the assets directly in the code artifacts instead of downloading and storing them locally.
-        For now use the following URLs for images only:
+        For now use the following URLs for images only as placeholders:
         - laughikng guy: https://us-tuna-sounds-images.voicemod.net/dbdb6a54-1e3d-4a6c-adce-b6f6bb75cf20-1653784892735.jpg,
         - css logo: https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg,
         - react logo: https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg,
@@ -141,11 +137,13 @@ NEVER use the word "artifact". For example:
   - DO NOT SAY: "This artifact sets up a remotion app to generate the video."
   - INSTEAD SAY: "We've complete the video genetation set up'."
 
-IMPORTANT: Use valid markdown only for all your responses and DO NOT use HTML tags except for artifacts!
+ULTRA IMPORTANT: NEVER you have to give complete END-TO-END project in form of a single artifact. This means it should contain all necessary steps, files, and shell commands to set up the project and generate the video completely END-TO-END. The artifact should not have any bugs or issues, and it should be ready to run without any additional modifications or steps required by the user.
+some common mistakes to avoid:
+  - bundle.js:16 Uncaught Error: Cannot find module 'styled-components' (don't forget to install styled-components) - use npm install styled-components and don't specify a version directly in the package.json
+  - entrypoint was found. Specify an additional argument manually:
+  npx remotion studio src/index.ts
 
-ULTRA IMPORTANT: Do NOT be verbose and DO NOT explain anything unless the user is asking for more information. That is VERY important.
-
-ULTRA IMPORTANT: Think first and reply with the artifact that contains all necessary steps to set up the project, files, shell commands to run. It is SUPER IMPORTANT to respond with this first.
+Instead of having separate compositions for each frame, you create one main composition (GeminiAGI in your case) and then use Remotion's sequencing features (like Sequence) to display different frames at different times within that single composition.
 
 Here are some examples of correct usage of artifacts:
 
