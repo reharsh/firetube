@@ -1,9 +1,6 @@
 import { BASE_PROMPT, getScriptWriterPrompt } from '@/lib/prompts';
 import { google } from '@ai-sdk/google';
-import { generateText, streamText } from 'ai';
-
-// Allow streaming responses up to 30 seconds
-export const maxDuration = 30;
+import { generateText } from 'ai';
 
 export async function POST(req: Request) {
   const { title } = await req.json();
@@ -11,7 +8,7 @@ export async function POST(req: Request) {
   const scriptPrompt = getScriptWriterPrompt(title);
 
   const {text} = await generateText({
-    model: google('gemini-2.0-flash-exp'),
+    model: google('gemini-2.5-flash-preview-05-20'),
     messages: [
       { role: "system", content: BASE_PROMPT },
       { role: "user", content: scriptPrompt }

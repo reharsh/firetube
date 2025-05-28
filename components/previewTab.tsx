@@ -46,9 +46,9 @@ function PreviewTab({webcontainer, setPreviewUrl}: {webcontainer: WebContainer, 
     return (
         <>
             <div className="h-full w-full flex items-center justify-center text-gray-400">
-            {!url && <div className="text-center">
+            <div className="text-center">
                 <div ref={terminalRef} className="terminal"></div>
-            </div>}
+            </div>
             {url && <iframe width={"100%"} height={"100%"} src={url} />}
             </div>
         </>

@@ -7,7 +7,7 @@ import useWebcontainer from "@/hooks/useWebcontainer";
 import createStructuredFiles from "@/lib/createStructuredFiles";
 import { FileNode, parseXML, Step, StepType } from "@/lib/parseXML";
 import { remotionPrePrompt } from "@/lib/prompts";
-import { Code, Maximize2, MonitorPlay } from "lucide-react";
+import { Code, IterationCcw, Maximize2, MonitorPlay } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export default function Producer () {
@@ -45,7 +45,6 @@ export default function Producer () {
         setLoading(false);
         
         const {artifact} = await stepResponse.json()
-        console.log("got artifact: ",artifact);
         const parsedBuiltSteps = parseXML(artifact);
         console.log("these are parsed build steps: ",parsedBuiltSteps);
 
@@ -154,9 +153,8 @@ export default function Producer () {
     },[steps,files]);
 
     useEffect(() => {
-        buildSteps("World war 2");
+      buildSteps();
     },[]);
-
 
     useEffect(() => {
       const mountFiles = async () => {
@@ -174,9 +172,9 @@ export default function Producer () {
     return (
         <div className="w-full h-full flex flex-col bg-zinc-800 p-4">
             <h1>Producer</h1>
-            <button onClick={() => buildSteps("googles gemini is agi?")}>
-                Build sample title
-            </button>
+            <Button size="icon" onClick={() => buildSteps("googles gemini is agi?")}>
+              <IterationCcw/>
+            </Button>
 
       <div className="flex flex-1 overflow-hidden">
         <div className="w-[55%] border-r border-border p-4">

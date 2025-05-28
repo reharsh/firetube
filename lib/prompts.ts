@@ -36,7 +36,7 @@ Your script must be made up of series of Frames. Each frame must have following 
     <fireArtifact>
         <frame>
             <time>0:00-0:05</time>
-            <props><image>css_logo</image><meme>fighting</meme><text>styles are gone!</text><image>react logo</image></props>
+            <props><image anim="fade_in">css logo</image><meme anim="scale_up">fighting</meme><text anim="word_reveal">styles are gone!</text><image anim="fade_in">react logo</image></props>
             <description>Quick animation of CSS rules fighting each other, maybe with little power bars. Energetic, slightly chaotic music starts.</description>
             <narrator>(Fast-paced, slightly exasperated) Ever write some perfect CSS, hit refresh, and... nothing? Your styles are just... gone? Yeah, welcome to the wild world of CSS Specificity.</narrator>
         </frame>
@@ -49,20 +49,44 @@ Your script must be made up of series of Frames. Each frame must have following 
         ...
         </frame>
     </fireArtifact>
+
+    each prop must have an anim attribute that specifies the animation to use for the prop.
+    the anim attribute can be one of the following values:
+    - fade_in
+    - fade_out
+    - slide_in
+    - slide_out
+    - scale_up
+    - scale_down
+    - rotate
+    - color_transition
+    - grow
+    - shrink
+    - letter_reveal
+    - word_reveal
+    - pulse
+    - typing_effect
+    - flip
+    - blur_in
+    - blur_out
+    - slide_fade
+    - bounce
+    - staggered_animation
 </script_instructions>
 `
 
 
 export const artifactInfoPrompt = (cwd: string = WORK_DIR, script: string) => `
-You've been tasked with creating a comprehensive artifact for a video project using Remotion. This artifact will include all necessary steps, files, and shell commands to set up the project and generate the video completely END-TO-END.
+You've been tasked with creating a comprehensive artifact for a video project using Remotion. This artifact will include all necessary steps, files, and shell commands in sequence to set up the project and generate the video completely END-TO-END.
 Script for the video project:
 ${script} 
+
 <artifact_info>
-  Firetube creates a SINGLE, comprehensive artifact for each video project. The artifact contains all necessary steps and components of a remotion app to generate video, including:
+  you should create a SINGLE, comprehensive artifact for each video project. The artifact contains all necessary steps and components of a remotion app to generate video, including:
 
   - Shell commands to run including dependencies to install using a package manager (NPM)
-  - Files to create and their contents
-  - Folders to create if necessary
+  - Files, Frame Files to create and their contents
+  - everything must be in src folder, like src/index.tsx, src/Frame01.tsx, src/Frame02.tsx, src/Main.tsx etc.
 
   <artifact_instructions>
     1. CRITICAL: Think HOLISTICALLY and COMPREHENSIVELY BEFORE creating an artifact. This means:
@@ -138,12 +162,13 @@ NEVER use the word "artifact". For example:
   - INSTEAD SAY: "We've complete the video genetation set up'."
 
 ULTRA IMPORTANT: NEVER you have to give complete END-TO-END project in form of a single artifact. This means it should contain all necessary steps, files, and shell commands to set up the project and generate the video completely END-TO-END. The artifact should not have any bugs or issues, and it should be ready to run without any additional modifications or steps required by the user.
-some common mistakes to avoid:
+some common mistakes and remotion errors to avoid:
   - bundle.js:16 Uncaught Error: Cannot find module 'styled-components' (don't forget to install styled-components) - use npm install styled-components and don't specify a version directly in the package.json
-  - entrypoint was found. Specify an additional argument manually:
-  npx remotion studio src/index.ts
+  - entrypoint was found. Specify an additional argument manually: npx remotion studio src/index.tsx
+  - bundle.js:17 Uncaught Error: Cannot find module './MainTimeline' - you must create a MainTimeline.tsx file and import it in the index.tsx file.
+  - outputRange must contain only numbers, not strings.
 
-Instead of having separate compositions for each frame, you create one main composition (GeminiAGI in your case) and then use Remotion's sequencing features (like Sequence) to display different frames at different times within that single composition.
+Instead of having separate compositions for each frame, you must create one main composition and then use Remotion's sequencing features (like Sequence) to display different frames at different times within that single composition. which enables commands like npx remotion studio src/index.tsx to work.
 
 Here are some examples of correct usage of artifacts:
 
@@ -300,4 +325,4 @@ Here are some examples of correct usage of artifacts:
 `
 
 
-export const remotionPrePrompt = `<fireArtifact id=\"project-import\" title=\"Project Files\"><fireAction type=\"file\" filePath=\"package.json\">{\n  \"name\": \"template-empty\",\n  \"version\": \"1.0.0\",\n  \"description\": \"My Remotion video\",\n  \"scripts\": {\n    \"dev\": \"remotion studio\",\n    \"build\": \"remotion bundle\",\n    \"upgrade\": \"remotion upgrade\",\n    \"lint\": \"eslint src && tsc\"\n  },\n  \"repository\": {},\n  \"license\": \"UNLICENSED\",\n  \"dependencies\": {\n    \"@remotion/cli\": \"^4.0.0\",\n    \"react\": \"19.0.0\",\n    \"react-dom\": \"19.0.0\",\n    \"remotion\": \"^4.0.0\"\n  },\n  \"devDependencies\": {\n    \"@remotion/eslint-config-flat\": \"^4.0.0\",\n    \"@types/react\": \"19.0.0\",\n    \"@types/web\": \"0.0.166\",\n    \"eslint\": \"9.19.0\",\n    \"prettier\": \"3.3.3\",\n    \"typescript\": \"5.8.2\"\n  },\n  \"private\": true\n}\n</fireAction><fireAction type=\"file\" filePath=\"remotion.config.ts\">module.exports = {\n  compositionName: 'composition_name',\n  serveDir: 'out',\n};\n</fireAction><fireAction type=\"file\" filePath=\"tsconfig.json\">{\n  \"compilerOptions\": {\n    \"target\": \"ES2018\",\n    \"module\": \"commonjs\",\n    \"jsx\": \"react-jsx\",\n    \"strict\": true,\n    \"noEmit\": true,\n    \"lib\": [\"es2015\"],\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"noUnusedLocals\": true\n  },\n  \"exclude\": [\"remotion.config.ts\"]\n}\n</fireAction></fireArtifact>`;
+export const remotionPrePrompt = `<fireArtifact id=\"project-import\" title=\"Project Files\"><fireAction type=\"file\" filePath=\"package.json\">{\n  \"name\": \"template-empty\",\n  \"version\": \"1.0.0\",\n  \"description\": \"My Remotion video\",\n  \"scripts\": {\n    \"dev\": \"remotion studio\",\n    \"build\": \"remotion bundle\",\n    \"upgrade\": \"remotion upgrade\",\n    \"lint\": \"eslint src && tsc\"\n  },\n  \"repository\": {},\n  \"license\": \"UNLICENSED\",\n  \"dependencies\": {\n    \"@remotion/cli\": \"^4.0.0\",\n    \"react\": \"19.0.0\",\n    \"react-dom\": \"19.0.0\",\n    \"remotion\": \"^4.0.0\",\n  \"styled-components\": \"^6.1.18\"\n  },\n  \"devDependencies\": {\n    \"@remotion/eslint-config-flat\": \"^4.0.0\",\n    \"@types/react\": \"19.0.0\",\n    \"@types/web\": \"0.0.166\",\n    \"eslint\": \"9.19.0\",\n    \"prettier\": \"3.3.3\",\n    \"typescript\": \"5.8.2\"\n  },\n  \"private\": true\n}\n</fireAction><fireAction type=\"file\" filePath=\"remotion.config.ts\">module.exports = {\n  compositionName: 'composition_name',\n  serveDir: 'out',\n};\n</fireAction><fireAction type=\"file\" filePath=\"tsconfig.json\">{\n  \"compilerOptions\": {\n    \"target\": \"ES2018\",\n    \"module\": \"commonjs\",\n    \"jsx\": \"react-jsx\",\n    \"strict\": true,\n    \"noEmit\": true,\n    \"lib\": [\"es2015\"],\n    \"esModuleInterop\": true,\n    \"skipLibCheck\": true,\n    \"forceConsistentCasingInFileNames\": true,\n    \"noUnusedLocals\": true\n  },\n  \"exclude\": [\"remotion.config.ts\"]\n}\n</fireAction></fireArtifact>`;
