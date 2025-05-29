@@ -76,10 +76,15 @@ Your script must be made up of series of Frames. Each frame must have following 
 `
 
 
-export const artifactInfoPrompt = (cwd: string = WORK_DIR, script: string) => `
+export const artifactInfoPrompt = (cwd: string = WORK_DIR, script?: string, artifact?: string) => `
 You've been tasked with creating a comprehensive artifact for a video project using Remotion. This artifact will include all necessary steps, files, and shell commands in sequence to set up the project and generate the video completely END-TO-END.
 Script for the video project:
 ${script} 
+
+Already existing artifact:
+${artifact}
+
+if already existing artifact is provided, you should update it with the new changes. and provide the updated artifact.
 
 <artifact_info>
   you should create a SINGLE, comprehensive artifact for each video project. The artifact contains all necessary steps and components of a remotion app to generate video, including:

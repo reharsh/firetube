@@ -14,6 +14,9 @@ import {
     Paperclip,
     PlusIcon,
 } from "lucide-react";
+import { create } from "zustand";
+import useTitleStore from "@/store/title";
+import { useRouter } from "next/navigation";
 
 interface UseAutoResizeTextareaProps {
     minHeight: number;
@@ -73,6 +76,8 @@ function useAutoResizeTextarea({
 
 export function Input() {
     const [value, setValue] = useState("");
+    const { setTitle } = useTitleStore();
+    const router = useRouter();
     const { textareaRef, adjustHeight } = useAutoResizeTextarea({
         minHeight: 60,
         maxHeight: 200,
@@ -82,6 +87,8 @@ export function Input() {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             if (value.trim()) {
+                setTitle(value);
+                router.push('/producer');
                 setValue("");
                 adjustHeight(true);
             }
