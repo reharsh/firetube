@@ -36,7 +36,7 @@ export default function Producer () {
           console.log("messages: ",messages);
           console.log("currentArtifact: ",currentArtifact);
           console.log("title: ",title);
-          stepResponse = await fetch(`http://localhost:3000/api/create`, {
+          stepResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/create`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -60,7 +60,7 @@ export default function Producer () {
                 status: 'pending'
             })));
 
-            stepResponse = await fetch(`http://localhost:3000/api/create`, {
+            stepResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/create`, {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json'

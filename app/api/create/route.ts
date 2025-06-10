@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     });
     text = result.text;
   }
-    const response = await fetch(`${process.env.APP_URL}/api/artifact`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/artifact`, {
       method: "POST",
       body: JSON.stringify({ script: text, messages }),
     });
