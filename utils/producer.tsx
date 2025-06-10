@@ -12,6 +12,7 @@ import useTitleStore from "@/store/title";
 import { ArrowUpIcon, Code, Hammer, IterationCcw, Maximize2, MonitorPlay, Paperclip, PlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useChat } from '@ai-sdk/react';
+import { renderVideo } from "./renderVideo";
 
 export default function Producer () {
 
@@ -25,6 +26,8 @@ export default function Producer () {
     const [value, setValue] = useState("");
     const [currentArtifact, setCurrentArtifact] = useState<string>('');
     const [messages, setMessages] = useState<any[]>([]);
+    const [structuredFiles, setStructuredFiles] = useState({})
+    const [isRenderLoading, setIsRenderLoading] = useState(false);
 
     async function buildSteps(title?: string, messages?: any[]) {
       try{
@@ -185,7 +188,8 @@ export default function Producer () {
 
     useEffect(() => {
       const mountFiles = async () => {
-        const structuredFiles = await createStructuredFiles(files);
+        const strFiles = await createStructuredFiles(files);
+        setStructuredFiles(strFiles)
         if (isBooted && webcontainer) {
             webcontainer?.mount(structuredFiles)
         }
@@ -195,6 +199,21 @@ export default function Producer () {
 
     return (
         <div className="w-full h-full flex flex-col bg-black text-white p-4">
+          {isRenderLoading && (
+            <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+              <div className="bg-neutral-900/80 rounded-2xl p-8 flex flex-col items-center gap-6 border border-neutral-800 shadow-2xl">
+                <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+                <div className="flex flex-col items-center gap-2">
+                  <h3 className="text-2xl font-semibold bg-gradient-to-r from-blue-400 to-blue-600 bg-clip-text text-transparent">
+                    Creating Your Video
+                  </h3>
+                  <p className="text-neutral-400 text-center max-w-sm">
+                    Hold tight! We're crafting your Fireship-style video. This might take a minute...
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
           <header className="flex items-center justify-between p-4 border-b border-neutral-800">
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-semibold">Firetube</h1>
@@ -202,8 +221,38 @@ export default function Producer () {
               </div>
             </div>
             <div className="flex items-center gap-2">
-              <Button size='default' className="bg-blue-500 hover:bg-blue-500/90 cursor-pointer" onClick={() => setIsPreviewOpen(!isPreviewOpen)}>
-                <Hammer className="w-4 h-4" /> Render
+              <Button 
+                size='default' 
+                className={cn(
+                  "relative",
+                  isRenderLoading 
+                    ? "bg-blue-500/50 hover:bg-blue-500/50 cursor-not-allowed" 
+                    : "bg-blue-500 hover:bg-blue-500/90 cursor-pointer"
+                )}
+                disabled={isRenderLoading}
+                onClick={async () => {
+                  if (isBooted && webcontainer) {
+                    setIsRenderLoading(true);
+                    console.log(`here's your str files: `, structuredFiles)
+                    const fileName = await renderVideo(webcontainer);
+                    console.log('finally rendered video from main: ', fileName)
+                    setIsRenderLoading(false);
+                  }
+                }}
+              >
+                {isRenderLoading ? (
+                  <>
+                    <div className="absolute inset-0 bg-blue-500/20 backdrop-blur-sm rounded-md flex items-center justify-center">
+                      <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                    </div>
+                    <span className="opacity-50">Rendering...</span>
+                  </>
+                ) : (
+                  <>
+                    <Hammer className="w-4 h-4" />
+                    <span>Render</span>
+                  </>
+                )}
               </Button>
             </div>
           </header>
