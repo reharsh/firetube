@@ -9,7 +9,7 @@ import { FileNode, parseXML, Step, StepType } from "@/lib/parseXML";
 import { remotionPrePrompt } from "@/lib/prompts";
 import { cn } from "@/lib/utils";
 import useTitleStore from "@/store/title";
-import { ArrowUpIcon, Code, Hammer, IterationCcw, Maximize2, MonitorPlay, Paperclip, PlusIcon } from "lucide-react";
+import { ArrowUpIcon, Code, Hammer, IterationCcw, Maximize2, MonitorPlay, Paperclip, PlusIcon, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useChat } from '@ai-sdk/react';
 import { renderVideo } from "./renderVideo";
@@ -201,6 +201,9 @@ export default function Producer () {
         <div className="w-full h-full flex flex-col bg-black text-white p-4">
           {isRenderLoading && (
             <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center">
+              <button onClick={() => setIsRenderLoading(false)} className="absolute top-4 right-4">
+                <XIcon className="w-4 h-4" />
+              </button>
               <div className="bg-neutral-900/80 rounded-2xl p-8 flex flex-col items-center gap-6 border border-neutral-800 shadow-2xl">
                 <div className="w-16 h-16 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
                 <div className="flex flex-col items-center gap-2">

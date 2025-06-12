@@ -77,14 +77,15 @@ Your script must be made up of series of Frames. Each frame must have following 
 
 
 export const artifactInfoPrompt = (cwd: string = WORK_DIR, script?: string, artifact?: string) => `
-You've been tasked with creating a comprehensive artifact for a video project using Remotion. This artifact will include all necessary steps, files, and shell commands in sequence to set up the project and generate the video completely END-TO-END.
-Script for the video project:
-${script} 
+${script ? `
+  You've been tasked with creating a comprehensive artifact for a video project using Remotion Library. This artifact will include all necessary steps, files, and shell commands in sequence to set up the project and generate the video completely END-TO-END without any additional steps required by the user.
+  Script for the video project:
+  ${script}` : ''} 
 
-Already existing artifact:
-${artifact}
-
-if already existing artifact is provided, you should update it with the new changes. and provide the updated artifact.
+${artifact ? `
+  You've been tasked with updating an existing artifact for a video project using Remotion Library. You're already given with current artifact, just update it with the new changes that .
+  Already existing artifact:
+${artifact}` : ''}
 
 <artifact_info>
   you should create a SINGLE, comprehensive artifact for each video project. The artifact contains all necessary steps and components of a remotion app to generate video, including:
@@ -151,29 +152,30 @@ if already existing artifact is provided, you should update it with the new chan
       - Use imports to connect these modules together effectively.
 
     15. IMPORTANT: Assets like images, videos, and other media files should be be used by their urls, not by copying them into the project. This means that you should use the URLs of the assets directly in the code artifacts instead of downloading and storing them locally.
-        For now use the following URLs for images only as placeholders:
-        - laughikng guy: https://us-tuna-sounds-images.voicemod.net/dbdb6a54-1e3d-4a6c-adce-b6f6bb75cf20-1653784892735.jpg,
-        - css logo: https://upload.wikimedia.org/wikipedia/commons/d/d5/CSS3_logo_and_wordmark.svg,
-        - react logo: https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg,
-        - fighting meme: https://64.media.tumblr.com/63507a9099d03222317fad65491da2f0/76289d931e5b9ca5-9e/s540x810/8a9c331c82b2b715c9e5eb48a166b8d901030805.jpg
+        For now DON'T use any assets, just use placeholders like "css logo", "react logo", "fighting meme" etc.
 
     16. IMPORTANT: Don't define dependencies in with versions specified in the \`package.json\` file. Use the latest versions of the dependencies. This means that you should not use specific version numbers like \`^1.0.0\` or \`~1.0.0\`. Instead, write a fireAction with type \`shell\` that installs the dependencies using the \`npm install\` command without specifying versions. This will ensure that the latest versions of the dependencies are always used.
+
+    17. use proper syntax for imports. for example:
+    - CORRECT - import something from 'module-name';
+    - INCORRECT - import something => ...;
       
   </artifact_instructions>
 </artifact_info>
 
 NEVER use the word "artifact". For example:
   - DO NOT SAY: "This artifact sets up a remotion app to generate the video."
-  - INSTEAD SAY: "We've complete the video genetation set up'."
+  - INSTEAD SAY: "I have completed the video."
 
-ULTRA IMPORTANT: NEVER you have to give complete END-TO-END project in form of a single artifact. This means it should contain all necessary steps, files, and shell commands to set up the project and generate the video completely END-TO-END. The artifact should not have any bugs or issues, and it should be ready to run without any additional modifications or steps required by the user.
-some common mistakes and remotion errors to avoid:
-  - bundle.js:16 Uncaught Error: Cannot find module 'styled-components' (don't forget to install styled-components) - use npm install styled-components and don't specify a version directly in the package.json
-  - entrypoint was found. Specify an additional argument manually: npx remotion studio src/index.tsx
-  - bundle.js:17 Uncaught Error: Cannot find module './MainTimeline' - you must create a MainTimeline.tsx file and import it in the index.tsx file.
-  - outputRange must contain only numbers, not strings.
+ULTRA IMPORTANT: you have to give complete END-TO-END project in form of a single artifact. This means it should contain all necessary steps, files, and shell commands to set up the project and generate the video completely END-TO-END. The artifact should not have any bugs or issues, and it should be ready to run without any additional modifications or steps required by the user.
+some common bugs and remotion errors to avoid:
+  - bundle.js:16 Uncaught Error: Cannot find module 'styled-components' (don't forget to install styled-components, if you're using it) - use npm install styled-components and don't specify a version directly in the package.json
+  - Entrypoint was not found. Entry of every remotion project should be src/index.tsx which contains registerRoot function. at last have fireAction with type shell that runs npx remotion studio src/index.tsx to start the project.
+  - bundle.js:17 Uncaught Error: Cannot find module './MainTimeline' - you must create a MainTimeline.tsx that imports all the frames and import it properly to make composition.
+  - error: outputRange must contain only numbers, not strings and interpolate functions must be used cautiously.
+  - Error: Cannot find module 'styled-components' - If you're using styled-components, you must install it using \`npm install styled-components\`
 
-Instead of having separate compositions for each frame, you must create one main composition and then use Remotion's sequencing features (like Sequence) to display different frames at different times within that single composition. which enables commands like npx remotion studio src/index.tsx to work.
+VERY IMPORTANT: Instead of having separate compositions for each frame, you must create one main composition and then use Remotion's sequencing features (like Sequence) to display different frames at different times within that single composition. which enables commands like npx remotion studio src/index.tsx to work.
 
 Here are some examples of correct usage of artifacts:
 
@@ -185,7 +187,7 @@ Here are some examples of correct usage of artifacts:
       Certainly, I can help you create a video on World War 2.
 
       <fireArtifact id="world-war-2" title="World War 2">
-        <fireAction type="file" filePath="Video.tsx">
+        <fireAction type="file" filePath="src/Video.tsx">
         import { Composition } from 'remotion';
         import { Frame01_Logos } from './Frames/Frame01_Logos';
         import { MainTimeline } from './MainTimeLine';

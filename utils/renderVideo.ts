@@ -3,7 +3,7 @@ import { mkdir, writeFile } from "fs/promises";
 import { dirname } from "path";
 import JSZip from "jszip";
 
-export const renderVideo = async (webcontainer: WebContainer, fileName: string = `export-${Date.now()}.zip`) => {
+export const renderVideo = async (webcontainer: WebContainer, fileName: string = `export-${Date.now()}`) => {
   const zip = new JSZip();
 
   async function addDirToZip(currentPath: string, zipFolder: JSZip) {
@@ -28,7 +28,7 @@ export const renderVideo = async (webcontainer: WebContainer, fileName: string =
   const zipBlob = await zip.generateAsync({ type: 'blob' });
 
   console.log("backend url: ", process.env.NEXT_PUBLIC_BACKEND_URL)
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/upload?fileName=${fileName}&fileType=${zipBlob.type}`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/upload?fileName=${fileName}.zip&fileType=${zipBlob.type}`);
 
   if (!res.ok) {
     throw new Error(`Failed to get pre-signed URL: ${res.statusText}`);
@@ -49,7 +49,7 @@ export const renderVideo = async (webcontainer: WebContainer, fileName: string =
   }
   
   console.log('uploaded to s3: ', fileName)
-  const renderResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/render?fileName=${fileName}`,{
+  const renderResponse = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/post-upload?fileName=${fileName}.zip`,{
     method: "POST",
     headers: {
       "Content-Type": "application/json"

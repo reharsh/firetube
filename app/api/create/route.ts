@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   if(title){
     const scriptPrompt = getScriptWriterPrompt(title);
     const result = await generateText({
-      model: google('gemini-2.5-flash-preview-05-20'),
+      model: google(process.env.GEMINI_MODEL as string),
       messages: [
         { role: "system", content: BASE_PROMPT },
         { role: "user", content: scriptPrompt }
