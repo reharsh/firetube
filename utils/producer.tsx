@@ -237,8 +237,8 @@ export default function Producer () {
                   if (isBooted && webcontainer) {
                     setIsRenderLoading(true);
                     console.log(`here's your str files: `, structuredFiles)
-                    const fileName = await renderVideo(webcontainer);
-                    console.log('finally rendered video from main: ', fileName)
+                    await renderVideo(webcontainer);
+                    console.log('finally rendered video from main, HURRAY!')
                     setIsRenderLoading(false);
                   }
                 }}
