@@ -7,19 +7,18 @@ import { generateText } from 'ai';
 export async function POST(req: Request) {
   const { script, messages, artifact } = await req.json();
 
-  const artifactInfo = script && !artifact ? artifactInfoPrompt(WORK_DIR, script) : artifactInfoPrompt(WORK_DIR, undefined, artifact);
-
+  const artifactInfo = !artifact ? artifactInfoPrompt(WORK_DIR, script) : artifactInfoPrompt(WORK_DIR, undefined, artifact);
 
   let text = '';
-  if (messages) {
+  if (messages && artifact) {
     // TODO: we can optimize this in future by only asking to update the artifact as a system message
     const result = await generateText({
       model: google(process.env.GEMINI_MODEL as string),
       messages: [
-        ...messages,
         { role: "user", content: `Here is an artifact that contains all files of the project visible to you.\nConsider the contents of ALL files in the project. Here is a list of files that exist on the file system but are not being shown to you:\n\n  - .gitignore\n  - package-lock.json\n` },
         { role: "user", content: artifactInfo },
         { role: "user", content: "Please respond strictly following the <fireArtifact> format." },
+        ...messages,
       ],
       maxRetries: 3,
     });

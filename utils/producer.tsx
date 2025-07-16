@@ -9,9 +9,8 @@ import { FileNode, parseXML, Step, StepType } from "@/lib/parseXML";
 import { remotionPrePrompt } from "@/lib/prompts";
 import { cn } from "@/lib/utils";
 import useTitleStore from "@/store/title";
-import { ArrowUpIcon, Code, Hammer, IterationCcw, Maximize2, MonitorPlay, Paperclip, PlusIcon, XIcon } from "lucide-react";
+import { ArrowUpIcon, Hammer, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useChat } from '@ai-sdk/react';
 import { renderVideo } from "./renderVideo";
 
 export default function Producer () {
@@ -21,7 +20,6 @@ export default function Producer () {
     const [files, setFiles] = useState<FileNode[]>([]);
     const { webcontainer, isBooted } = useWebcontainer();
     const [previewUrl, setPreviewUrl] = useState<string>('');
-    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const { title } = useTitleStore();
     const [value, setValue] = useState("");
     const [currentArtifact, setCurrentArtifact] = useState<string>('');
@@ -32,10 +30,8 @@ export default function Producer () {
     async function buildSteps(title?: string, messages?: any[]) {
       try{
         let stepResponse: Response;
-        if(messages && messages.length > 0 && currentArtifact && !title){
-          console.log("messages: ",messages);
-          console.log("currentArtifact: ",currentArtifact);
-          console.log("title: ",title);
+        if(!title){
+          console.log("sending messages: ", messages);
           stepResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/create`, {
             method: 'POST',
             headers: {
@@ -49,13 +45,15 @@ export default function Producer () {
           setMessages([{role: 'user', content: title}]);
             // for now uiprompts is only remotionPrePrompt so,
             const xml = remotionPrePrompt;
-            const uiSteps = parseXML(xml);
+            // build some files first without getting artifact from server (package.json, remotion.config.ts, etc)
+            // this preprompt gives llm some good idea about the project structure and files to build.
+            const preSteps = parseXML(xml);
 
-            console.log("ui steps: ",uiSteps);
+            console.log("pre steps: ", preSteps);
 
             setLoading(true);
 
-            setsteps(uiSteps.map((x: Step) => ({
+            setsteps(preSteps.map((x: Step) => ({
                 ...x,
                 status: 'pending'
             })));
@@ -73,13 +71,16 @@ export default function Producer () {
 
         const {artifact} = await stepResponse.json()
         setCurrentArtifact(artifact);
-        setMessages([{role: 'assistant', content: artifact}]);
+        const assistantMessage = artifact.match(/([\s\S]*?)<fireArtifact[^>]*>/)?.[1] || '';
+        console.log("assistant message: ", assistantMessage);
+        setMessages([...(messages || []), {role: 'assistant', content: assistantMessage}]);
+        console.log("messages: ", messages);
         const parsedBuiltSteps = parseXML(artifact);
         console.log("parsed build steps: ",parsedBuiltSteps);
 
         setsteps(parsedBuiltSteps.map(content => ({
           ...content,
-          status: 'pending' as 'pending'
+          status: 'pending'
         })))
 
         // setLlmMessages([...prompts,prompt].map(content => ({
@@ -309,7 +310,7 @@ export default function Producer () {
                         <div className="flex items-center gap-2 absolute right-3 bottom-3">
                             <button
                                 onClick={async ()=>{
-                                  const newMessages = [...messages.filter((message:any) => message.role === 'user').map((message:any) => ({role: 'user', content: message.content})), {role: 'user', content: `current files artifact in the project is: ${currentArtifact}`}, {role: 'user', content: value}];
+                                  const newMessages = [...messages.filter((message:any) => message.role === 'user').map((message:any) => ({role: 'user', content: message.content})), {role: 'user', content: value}];
                                   setMessages(newMessages);
                                   buildSteps(undefined, newMessages);
                                 }}
@@ -337,14 +338,6 @@ export default function Producer () {
         </div>
         <div className="w-[55%] border-r border-border p-4">
         <div className="relative w-full h-full bg-card rounded-lg">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2 z-10 bg-black/70 text-white hover:bg-black/80"
-                  onClick={() => setIsPreviewOpen(true)}
-                >
-                  <Maximize2 className=" h-4 w-4" />
-                </Button>
                 <div className="w-full h-full flex items-center justify-center">
                   {loading ? (
                     <Loading />

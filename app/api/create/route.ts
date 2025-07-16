@@ -3,9 +3,9 @@ import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
 
 export async function POST(req: Request) {
-  const { title, messages } = await req.json();
+  const { title, messages, artifact } = await req.json();
   
-  let text = '';
+  let script = '';
 
   if(title){
     const scriptPrompt = getScriptWriterPrompt(title);
@@ -16,11 +16,11 @@ export async function POST(req: Request) {
         { role: "user", content: scriptPrompt }
       ]
     });
-    text = result.text;
+    script = result.text;
   }
     const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/artifact`, {
       method: "POST",
-      body: JSON.stringify({ script: text, messages }),
+      body: JSON.stringify({ script, messages, artifact }),
     });
 
   if (!response.ok) {
@@ -29,5 +29,5 @@ export async function POST(req: Request) {
   }
   const artifactResponse = await response.json();
 
-  return Response.json({ script: text, artifact: artifactResponse.text });
+  return Response.json({ script, artifact: artifactResponse.text });
 }
