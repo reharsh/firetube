@@ -9,7 +9,7 @@ import { FileNode, parseXML, Step, StepType } from "@/lib/parseXML";
 import { remotionPrePrompt } from "@/lib/prompts";
 import { cn } from "@/lib/utils";
 import useTitleStore from "@/store/title";
-import { ArrowUpIcon, Hammer, XIcon } from "lucide-react";
+import { ArrowLeft, ArrowUpIcon, Hammer, Link, XIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { renderVideo } from "./renderVideo";
 
@@ -212,13 +212,24 @@ export default function Producer () {
                     Creating Your Video
                   </h3>
                   <p className="text-neutral-400 text-center max-w-sm">
-                    Hold tight! We're crafting your Fireship-style video. This might take a minute...
+                    Hold tight! We're crafting your video. This might take a minute...
                   </p>
                 </div>
               </div>
             </div>
           )}
           <header className="flex items-center justify-between p-4 border-b border-neutral-800">
+            <Button variant="outline" size="icon" onClick={() => {
+              setIsRenderLoading(false);
+              setMessages([]);
+              setCurrentArtifact('');
+              setFiles([]);
+              setStructuredFiles({});
+              setValue('');
+              window.location.href = '/hero';
+            }}>
+                <ArrowLeft className="w-4 h-4" />
+            </Button>
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-semibold">Firetube</h1>
               <div className="flex items-center gap-2">

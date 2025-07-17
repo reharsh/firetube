@@ -151,8 +151,7 @@ ${artifact}` : ''}
       - Keep files as small as possible by extracting related functionalities into separate modules.
       - Use imports to connect these modules together effectively.
 
-    15. IMPORTANT: Assets like images, videos, and other media files should be be used by their urls, not by copying them into the project. This means that you should use the URLs of the assets directly in the code artifacts instead of downloading and storing them locally.
-        For now DON'T use any assets, just use placeholders like "css logo", "react logo", "fighting meme" etc.
+    15. IMPORTANT: Don't use any external assets, you can use emojis or build some components using your creativity.
 
     16. IMPORTANT: Don't define dependencies in with versions specified in the \`package.json\` file. Use the latest versions of the dependencies. This means that you should not use specific version numbers like \`^1.0.0\` or \`~1.0.0\`. Instead, write a fireAction with type \`shell\` that installs the dependencies using the \`npm install\` command without specifying versions. This will ensure that the latest versions of the dependencies are always used.
 
