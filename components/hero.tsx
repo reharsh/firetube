@@ -137,6 +137,11 @@ export const HeroSection = () => {
 
                                 </form>
                             </div>
+                            <div className="mt-16">
+                            <Link href="https://youtu.be/CR0j2rEt12c" target="_blank" className=" border text-white mt border-white px-4 py-2 rounded-lg">
+                                <span className="btn-label">View Demo</span>
+                            </Link>
+                            </div>
                         </div>
                     </div>
 
